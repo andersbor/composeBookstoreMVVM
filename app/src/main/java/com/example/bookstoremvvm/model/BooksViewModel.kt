@@ -8,7 +8,7 @@ class BooksViewModel: ViewModel() {
     private val repository = BooksRepository()
     val booksFlow: State<List<Book>> = repository.booksFlow
     val errorMessageFlow: State<String> = repository.errorMessageFlow
-    val reloadingFlow: State<Boolean> = repository.reloadingFlow
+    val reloadingFlow: State<Boolean> = repository.isLoadingBooks
 
     init {
         reload()
@@ -19,17 +19,14 @@ class BooksViewModel: ViewModel() {
     }
 
     fun add(book: Book) {
-        //repository.add(book)
-        // TODO
+        repository.add(book)
     }
 
-    fun update(book: Book) {
-        //repository.update(book)
-        // TODO
+    fun update(bookId: Int, book: Book) {
+        repository.update(bookId, book)
     }
 
-    fun remove(book: Book) {
-        //repository.remove(book)
-        // TODO
+    fun remove(book: Book) { // TODO
+        repository.delete(book.id)
     }
 }

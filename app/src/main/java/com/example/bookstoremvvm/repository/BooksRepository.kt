@@ -15,8 +15,8 @@ class BooksRepository {
     // the specific (collection) part of the URL is on the individual methods in the interface BookstoreService
 
     private val bookStoreService: BookStoreService
-    val booksFlow: MutableState<List<Book>> = mutableStateOf(listOf<Book>())
-    val reloadingFlow = mutableStateOf(false)
+    val booksFlow: MutableState<List<Book>> = mutableStateOf(listOf())
+    val isLoadingBooks = mutableStateOf(false)
     val errorMessageFlow = mutableStateOf("")
 
     init {
@@ -32,10 +32,10 @@ class BooksRepository {
     }
 
     fun getBooks() {
-        reloadingFlow.value = true
+        isLoadingBooks.value = true
         bookStoreService.getAllBooks().enqueue(object : Callback<List<Book>> {
             override fun onResponse(call: Call<List<Book>>, response: Response<List<Book>>) {
-                reloadingFlow.value = false
+                isLoadingBooks.value = false
                 if (response.isSuccessful) {
                     //Log.d("APPLE", response.body().toString())
                     val bookList: List<Book>? = response.body()
@@ -49,9 +49,79 @@ class BooksRepository {
             }
 
             override fun onFailure(call: Call<List<Book>>, t: Throwable) {
-                reloadingFlow.value = false
-                errorMessageFlow.value = t.message?: "No connection to back-end"
-                Log.d("APPLE", t.message!!)
+                isLoadingBooks.value = false
+                val message = t.message?: "No connection to back-end"
+                errorMessageFlow.value = message
+                Log.d("APPLE", message)
+            }
+        })
+    }
+
+    fun add(book: Book) {
+        bookStoreService.saveBook(book).enqueue(object : Callback<Book> {
+            override fun onResponse(call: Call<Book>, response: Response<Book>) {
+                if (response.isSuccessful) {
+                    Log.d("APPLE", "Added: " + response.body())
+                    getBooks()
+                    errorMessageFlow.value = ""
+                } else {
+                    val message = response.code().toString() + " " + response.message()
+                    errorMessageFlow.value = message
+                    Log.d("APPLE", message)
+                }
+            }
+
+            override fun onFailure(call: Call<Book>, t: Throwable) {
+                val message = t.message?: "No connection to back-end"
+                errorMessageFlow.value = message
+                Log.d("APPLE", message)
+            }
+        })
+    }
+
+    fun delete(id: Int) {
+        Log.d("APPLE", "Delete: $id")
+        bookStoreService.deleteBook(id).enqueue(object : Callback<Book> {
+            override fun onResponse(call: Call<Book>, response: Response<Book>) {
+                if (response.isSuccessful) {
+                    Log.d("APPLE", "Delete: " + response.body())
+                    errorMessageFlow.value = ""
+                    getBooks()
+                } else {
+                    val message = response.code().toString() + " " + response.message()
+                    errorMessageFlow.value = message
+                    Log.d("APPLE", "Not deleted: $message")
+                }
+            }
+
+            override fun onFailure(call: Call<Book>, t: Throwable) {
+                val message = t.message?: "No connection to back-end"
+                errorMessageFlow.value = message
+                Log.d("APPLE", "Not deleted $message")
+            }
+        })
+    }
+
+    fun update(bookId: Int, book: Book) {
+        Log.d("APPLE", "Update: $bookId $book")
+        bookStoreService.updateBook(bookId, book).enqueue(object : Callback<Book> {
+            override fun onResponse(call: Call<Book>, response: Response<Book>) {
+                if (response.isSuccessful) {
+                    Log.d("APPLE", "Updated: " + response.body())
+                    errorMessageFlow.value = ""
+                    Log.d("APPLE", "update successful")
+                    getBooks()
+                } else {
+                    val message = response.code().toString() + " " + response.message()
+                    errorMessageFlow.value = message
+                    Log.d("APPLE", "Update $message")
+                }
+            }
+
+            override fun onFailure(call: Call<Book>, t: Throwable) {
+                val message = t.message?: "No connection to back-end"
+                errorMessageFlow.value = message
+                Log.d("APPLE", "Update $message")
             }
         })
     }

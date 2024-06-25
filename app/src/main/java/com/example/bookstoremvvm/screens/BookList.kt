@@ -1,5 +1,7 @@
 package com.example.bookstoremvvm.screens
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,10 +24,11 @@ import com.example.bookstoremvvm.model.Book
 @Composable
 fun BookList(
     books: List<Book>,
+    errorMessage: String,
     modifier: Modifier = Modifier,
     onBookSelected: (Book) -> Unit = {},
     onBookDeleted: (Book) -> Unit = {},
-    onAdd: () -> Unit = {} // TODO Floating Action Button, requires Scaffold??
+    onAdd: () -> Unit = {}
 ) {
     Scaffold(modifier = modifier,
         floatingActionButton = {
@@ -36,21 +39,30 @@ fun BookList(
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
             }
         }) { innerPadding ->
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            items(books) { book ->
-                Card(modifier = Modifier
-                    .padding(4.dp)
-                    .fillMaxSize(), onClick = { onBookSelected(book) }) {
-                    Text(
-                        modifier = Modifier.padding(8.dp),
-                        text = book.title + ": " + book.price.toString()
-                    )
-                    Button(onClick = { onBookDeleted(book) }) { // TODO icon
-                        Text(text = "Delete")
+        Column(modifier = modifier.padding(innerPadding)) {
+            Text(text = "Book List") // TODO style heading
+            if (errorMessage.isNotEmpty()) {
+                Text(text = errorMessage)
+            }
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+
+                items(books) { book ->
+                    Card(modifier = Modifier
+                        .padding(4.dp)
+                        .fillMaxSize(), onClick = { onBookSelected(book) }) {
+                        Row {
+                            Text(
+                                modifier = Modifier.padding(8.dp),
+                                text = book.title + ": " + book.price.toString()
+                            )
+                            Button(onClick = { onBookDeleted(book) }) { // TODO icon, no text, inline
+                                Text(text = "Delete")
+                            }
+                        }
                     }
                 }
             }
@@ -65,6 +77,7 @@ fun BookListPreview() {
         books = listOf(
             Book(title = "Kotlin for beginners", price = 10.0),
             Book(title = "Jetpack Compose", price = 20.0)
-        )
+        ),
+        errorMessage = "Some error message"
     )
 }
