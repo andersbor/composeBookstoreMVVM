@@ -26,9 +26,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BookstoreMVVMTheme {
-                //Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                 MainScreen()
-                //}
             }
         }
     }

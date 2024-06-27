@@ -26,7 +26,9 @@ class BooksViewModel: ViewModel() {
         repository.update(bookId, book)
     }
 
-    fun remove(book: Book) { // TODO
+    fun remove(book: Book) {
         repository.delete(book.id)
     }
+
+    // TODO sorting + filtering
 }

@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,19 +25,29 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.bookstoremvvm.model.Book
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookDetails(
     book: Book,
     modifier: Modifier = Modifier,
-    onUpdate: (Int, Book) -> Unit = { id: Int, book: Book -> }, // TODO separate id parameter for onUpdate?
+    onUpdate: (Int, Book) -> Unit = { id: Int, data: Book -> }, // TODO separate id parameter for onUpdate?
     onNavigateBack: () -> Unit = {}
 ) {
     var title by remember { mutableStateOf(book.title) }
     var priceStr by remember { mutableStateOf(book.price.toString()) }
-    Scaffold(modifier = modifier.fillMaxSize()) { innerPadding ->
+    Scaffold(modifier = modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary,
+                ),
+                title = { Text("Book details") })
+        }) { innerPadding ->
+        // TODO show error message
         Column(modifier = modifier.padding(innerPadding)) {
-            Text(text = "Book Details") // TODO style heading
             // TODO layout for landscape
+            // TODO add and details are very similar
             OutlinedTextField(onValueChange = { title = it },
                 value = title,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -55,7 +69,6 @@ fun BookDetails(
                 Button(onClick = {
                     // TODO validation
                     val data = Book(title = title, price = priceStr.toDouble())
-                    // TODO separate id parameter for onUpdate?
                     onUpdate(book.id, data)
                 }) {
                     Text("Update")
