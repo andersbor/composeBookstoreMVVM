@@ -8,6 +8,7 @@ class BooksViewModel: ViewModel() {
     private val repository = BooksRepository()
     val booksFlow: State<List<Book>> = repository.booksFlow
     val errorMessageFlow: State<String> = repository.errorMessageFlow
+    // TODO use reloadingFlow to show loading indicator
     val reloadingFlow: State<Boolean> = repository.isLoadingBooks
 
     init {
@@ -31,4 +32,11 @@ class BooksViewModel: ViewModel() {
     }
 
     // TODO sorting + filtering
+    fun sortBooksByTitle(ascending: Boolean) {
+        repository.sortBooksByTitle(ascending)
+    }
+
+    fun sortBooksByPrice(ascending: Boolean) {
+        repository.sortBooksByPrice(ascending)
+    }
 }

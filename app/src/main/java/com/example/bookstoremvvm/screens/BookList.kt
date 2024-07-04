@@ -21,11 +21,17 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -41,7 +47,9 @@ fun BookList(
     modifier: Modifier = Modifier,
     onBookSelected: (Book) -> Unit = {},
     onBookDeleted: (Book) -> Unit = {},
-    onAdd: () -> Unit = {}
+    onAdd: () -> Unit = {},
+    sortByTitle: (up: Boolean) -> Unit = {},
+    sortByPrice: (up: Boolean) -> Unit = {},
 ) {
     //val scaffoldState = rememberScaffoldState()
     Scaffold(modifier = modifier,
@@ -67,6 +75,27 @@ fun BookList(
         Column(modifier = modifier.padding(innerPadding)) {
             if (errorMessage.isNotEmpty()) {
                 Text(text = "Problem: $errorMessage")
+            }
+            val titleUp = "Title \u2191"
+            val titleDown = "Title \u2193"
+            val priceUp = "Price \u2191"
+            val priceDown = "Price \u2193"
+            var sortTitleAscending by remember { mutableStateOf(true) }
+            var sortPriceAscending by remember { mutableStateOf(true) }
+
+            Row {
+                OutlinedButton(onClick = {
+                    sortByTitle(sortTitleAscending)
+                    sortTitleAscending = !sortTitleAscending
+                }) {
+                    Text(text = if (sortTitleAscending) titleDown else titleUp)
+                }
+                TextButton(onClick = {
+                    sortByPrice(sortPriceAscending)
+                    sortPriceAscending = !sortPriceAscending
+                }) {
+                    Text(text = if (sortPriceAscending) priceDown else priceUp)
+                }
             }
             val orientation = LocalConfiguration.current.orientation
             val columns = if (orientation == Configuration.ORIENTATION_PORTRAIT) 1 else 2

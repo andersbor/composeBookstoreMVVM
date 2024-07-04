@@ -50,7 +50,7 @@ class BooksRepository {
 
             override fun onFailure(call: Call<List<Book>>, t: Throwable) {
                 isLoadingBooks.value = false
-                val message = t.message?: "No connection to back-end"
+                val message = t.message ?: "No connection to back-end"
                 errorMessageFlow.value = message
                 Log.d("APPLE", message)
             }
@@ -72,7 +72,7 @@ class BooksRepository {
             }
 
             override fun onFailure(call: Call<Book>, t: Throwable) {
-                val message = t.message?: "No connection to back-end"
+                val message = t.message ?: "No connection to back-end"
                 errorMessageFlow.value = message
                 Log.d("APPLE", message)
             }
@@ -95,7 +95,7 @@ class BooksRepository {
             }
 
             override fun onFailure(call: Call<Book>, t: Throwable) {
-                val message = t.message?: "No connection to back-end"
+                val message = t.message ?: "No connection to back-end"
                 errorMessageFlow.value = message
                 Log.d("APPLE", "Not deleted $message")
             }
@@ -119,10 +119,27 @@ class BooksRepository {
             }
 
             override fun onFailure(call: Call<Book>, t: Throwable) {
-                val message = t.message?: "No connection to back-end"
+                val message = t.message ?: "No connection to back-end"
                 errorMessageFlow.value = message
                 Log.d("APPLE", "Update $message")
             }
         })
+    }
+
+    fun sortBooksByTitle(ascending: Boolean) {
+        Log.d("APPLE", "Sort by title")
+        if (ascending)
+            booksFlow.value = booksFlow.value.sortedBy { it.title }
+        else
+            booksFlow.value = booksFlow.value.sortedByDescending { it.title }
+    }
+
+    fun sortBooksByPrice(ascending: Boolean) {
+        Log.d("APPLE", "Sort by price")
+        if (ascending)
+            booksFlow.value = booksFlow.value.sortedBy { it.price }
+        else
+            booksFlow.value = booksFlow.value.sortedByDescending { it.price }
+
     }
 }
