@@ -72,61 +72,96 @@ fun BookList(
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
             }
         }) { innerPadding ->
-        Column(modifier = modifier.padding(innerPadding)) {
-            if (errorMessage.isNotEmpty()) {
-                Text(text = "Problem: $errorMessage")
-            }
-            val titleUp = "Title \u2191"
-            val titleDown = "Title \u2193"
-            val priceUp = "Price \u2191"
-            val priceDown = "Price \u2193"
-            var sortTitleAscending by remember { mutableStateOf(true) }
-            var sortPriceAscending by remember { mutableStateOf(true) }
+        BookListPanel(
+            books = books,
+            modifier = Modifier.padding(innerPadding),
+            errorMessage = errorMessage,
+            sortByTitle = sortByTitle,
+            sortByPrice = sortByPrice,
+            onBookSelected = onBookSelected,
+            onBookDeleted = onBookDeleted
+        )
+    }
+}
 
-            Row {
-                OutlinedButton(onClick = {
-                    sortByTitle(sortTitleAscending)
-                    sortTitleAscending = !sortTitleAscending
-                }) {
-                    Text(text = if (sortTitleAscending) titleDown else titleUp)
-                }
-                TextButton(onClick = {
-                    sortByPrice(sortPriceAscending)
-                    sortPriceAscending = !sortPriceAscending
-                }) {
-                    Text(text = if (sortPriceAscending) priceDown else priceUp)
-                }
+@Composable
+private fun BookListPanel(
+    books: List<Book>,
+    modifier: Modifier = Modifier,
+    errorMessage: String,
+    sortByTitle: (up: Boolean) -> Unit,
+    sortByPrice: (up: Boolean) -> Unit,
+    onBookSelected: (Book) -> Unit,
+    onBookDeleted: (Book) -> Unit
+) {
+    Column(modifier = modifier) {
+        if (errorMessage.isNotEmpty()) {
+            Text(text = "Problem: $errorMessage")
+        }
+        val titleUp = "Title \u2191"
+        val titleDown = "Title \u2193"
+        val priceUp = "Price \u2191"
+        val priceDown = "Price \u2193"
+        var sortTitleAscending by remember { mutableStateOf(true) }
+        var sortPriceAscending by remember { mutableStateOf(true) }
+
+        Row {
+            OutlinedButton(onClick = {
+                sortByTitle(sortTitleAscending)
+                sortTitleAscending = !sortTitleAscending
+            }) {
+                Text(text = if (sortTitleAscending) titleDown else titleUp)
             }
-            val orientation = LocalConfiguration.current.orientation
-            val columns = if (orientation == Configuration.ORIENTATION_PORTRAIT) 1 else 2
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(columns),
-                modifier = modifier.fillMaxSize()
-            ) {
-                items(books) { book ->
-                    Card(modifier = Modifier
-                        .padding(4.dp)
-                        .fillMaxSize(), onClick = { onBookSelected(book) }) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                modifier = Modifier.padding(8.dp),
-                                text = book.title + ": " + book.price.toString()
-                            )
-                            Icon(
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = "Remove",
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .clickable { onBookDeleted(book) }
-                            )
-                        }
-                    }
-                }
+            TextButton(onClick = {
+                sortByPrice(sortPriceAscending)
+                sortPriceAscending = !sortPriceAscending
+            }) {
+                Text(text = if (sortPriceAscending) priceDown else priceUp)
             }
+        }
+        val orientation = LocalConfiguration.current.orientation
+        val columns = if (orientation == Configuration.ORIENTATION_PORTRAIT) 1 else 2
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(columns),
+            //modifier = modifier.fillMaxSize()
+        ) {
+            items(books) { book ->
+                BookItem(
+                    book,
+                    onBookSelected = onBookSelected,
+                    onBookDeleted = onBookDeleted
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun BookItem(
+    book: Book,
+    modifier: Modifier = Modifier,
+    onBookSelected: (Book) -> Unit = {},
+    onBookDeleted: (Book) -> Unit = {}
+) {
+    Card(modifier = modifier
+        .padding(4.dp)
+        .fillMaxSize(), onClick = { onBookSelected(book) }) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier.padding(8.dp),
+                text = book.title + ": " + book.price.toString()
+            )
+            Icon(
+                imageVector = Icons.Filled.Delete,
+                contentDescription = "Remove",
+                modifier = Modifier
+                    .padding(8.dp)
+                    .clickable { onBookDeleted(book) }
+            )
         }
     }
 }
