@@ -73,6 +73,6 @@ dependencies {
 
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
     implementation("androidx.compose.runtime:runtime-livedata:1.6.8") // observeAsState
 }
