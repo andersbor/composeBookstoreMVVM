@@ -10,6 +10,8 @@ import retrofit2.http.*
 // Add to AndroidManifest.xml
 //   <uses-permission android:name="android.permission.INTERNET" />
 
+// Add to gradle file: retrofit etc
+
 interface BookStoreService {
     @GET("books")
     fun getAllBooks(): Call<List<Book>>

@@ -70,6 +70,7 @@ fun BookDetails(
                     // TODO validation
                     val data = Book(title = title, price = priceStr.toDouble())
                     onUpdate(book.id, data)
+                    onNavigateBack()
                 }) {
                     Text("Update")
                 }

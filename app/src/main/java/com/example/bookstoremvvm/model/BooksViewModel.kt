@@ -31,7 +31,7 @@ class BooksViewModel: ViewModel() {
         repository.delete(book.id)
     }
 
-    // TODO sorting + filtering
+    // TODO filtering
     fun sortBooksByTitle(ascending: Boolean) {
         repository.sortBooksByTitle(ascending)
     }
