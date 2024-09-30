@@ -140,6 +140,16 @@ class BooksRepository {
             booksFlow.value = booksFlow.value.sortedBy { it.price }
         else
             booksFlow.value = booksFlow.value.sortedByDescending { it.price }
+    }
 
+    fun filterByTitle(titleFragment: String) {
+        if (titleFragment.isEmpty()) {
+            getBooks()
+            return
+        }
+        booksFlow.value =
+            booksFlow.value.filter {
+                it.title.contains(titleFragment, ignoreCase = true)
+            }
     }
 }

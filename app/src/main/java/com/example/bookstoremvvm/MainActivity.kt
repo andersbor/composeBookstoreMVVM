@@ -50,7 +50,8 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 onBookDeleted = { book -> viewModel.remove(book) },
                 onAdd = { navController.navigate(NavRoutes.BookAdd.route) },
                 sortByTitle = { viewModel.sortBooksByTitle(ascending = it) },
-                sortByPrice = { viewModel.sortBooksByPrice(ascending = it) }
+                sortByPrice = { viewModel.sortBooksByPrice(ascending = it) },
+                filterByTitle = { viewModel.filterByTitle(it) }
             )
         }
         composable(

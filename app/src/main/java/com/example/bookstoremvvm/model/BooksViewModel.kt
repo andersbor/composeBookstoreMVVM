@@ -39,4 +39,8 @@ class BooksViewModel: ViewModel() {
     fun sortBooksByPrice(ascending: Boolean) {
         repository.sortBooksByPrice(ascending)
     }
+
+    fun filterByTitle(titleFragment: String) {
+        repository.filterByTitle(titleFragment)
+    }
 }

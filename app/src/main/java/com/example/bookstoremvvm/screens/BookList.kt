@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -22,6 +23,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -50,6 +52,7 @@ fun BookList(
     onAdd: () -> Unit = {},
     sortByTitle: (up: Boolean) -> Unit = {},
     sortByPrice: (up: Boolean) -> Unit = {},
+    filterByTitle: (String) -> Unit = {}
 ) {
     //val scaffoldState = rememberScaffoldState()
     Scaffold(modifier = modifier,
@@ -79,7 +82,8 @@ fun BookList(
             sortByTitle = sortByTitle,
             sortByPrice = sortByPrice,
             onBookSelected = onBookSelected,
-            onBookDeleted = onBookDeleted
+            onBookDeleted = onBookDeleted,
+            onFilterByTitle = filterByTitle
         )
     }
 }
@@ -92,7 +96,8 @@ private fun BookListPanel(
     sortByTitle: (up: Boolean) -> Unit,
     sortByPrice: (up: Boolean) -> Unit,
     onBookSelected: (Book) -> Unit,
-    onBookDeleted: (Book) -> Unit
+    onBookDeleted: (Book) -> Unit,
+    onFilterByTitle: (String) -> Unit,
 ) {
     Column(modifier = modifier) {
         if (errorMessage.isNotEmpty()) {
@@ -104,6 +109,19 @@ private fun BookListPanel(
         val priceDown = "Price \u2193"
         var sortTitleAscending by remember { mutableStateOf(true) }
         var sortPriceAscending by remember { mutableStateOf(true) }
+        var titleFragment by remember { mutableStateOf("") }
+
+        Row {
+            OutlinedTextField(
+                value = titleFragment,
+                onValueChange = {titleFragment = it},
+                label = { Text("Title") },
+                modifier = Modifier.weight(1f)
+            )
+            Button(onClick = { onFilterByTitle(titleFragment) }) {
+                Text("Filter")
+            }
+        }
 
         Row {
             OutlinedButton(onClick = {
