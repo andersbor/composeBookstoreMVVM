@@ -41,6 +41,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bookstoremvvm.model.Book
 
+// Gradle dependency
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookList(
@@ -99,7 +101,7 @@ private fun BookListPanel(
     onBookDeleted: (Book) -> Unit,
     onFilterByTitle: (String) -> Unit,
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.padding(8.dp)) {
         if (errorMessage.isNotEmpty()) {
             Text(text = "Problem: $errorMessage")
         }
@@ -111,14 +113,15 @@ private fun BookListPanel(
         var sortPriceAscending by remember { mutableStateOf(true) }
         var titleFragment by remember { mutableStateOf("") }
 
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             OutlinedTextField(
                 value = titleFragment,
-                onValueChange = {titleFragment = it},
-                label = { Text("Title") },
+                onValueChange = { titleFragment = it },
+                label = { Text("Filter by title") },
                 modifier = Modifier.weight(1f)
             )
-            Button(onClick = { onFilterByTitle(titleFragment) }) {
+            Button(onClick = { onFilterByTitle(titleFragment) },
+                modifier = Modifier.padding(8.dp)) {
                 Text("Filter")
             }
         }
@@ -139,6 +142,7 @@ private fun BookListPanel(
         }
         val orientation = LocalConfiguration.current.orientation
         val columns = if (orientation == Configuration.ORIENTATION_PORTRAIT) 1 else 2
+
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns),
             //modifier = modifier.fillMaxSize()
@@ -150,6 +154,7 @@ private fun BookListPanel(
                     onBookDeleted = onBookDeleted
                 )
             }
+
         }
     }
 }

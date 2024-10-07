@@ -36,8 +36,8 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val viewModel: BooksViewModel = viewModel() // persistence
-    val books = viewModel.booksFlow.value
-    val errorMessage = viewModel.errorMessageFlow.value
+    val books = viewModel.books.value
+    val errorMessage = viewModel.errorMessage.value
 
     NavHost(navController = navController, startDestination = NavRoutes.BookList.route) {
         composable(NavRoutes.BookList.route) {

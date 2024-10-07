@@ -2,6 +2,7 @@ package com.example.bookstoremvvm.repository
 
 import com.example.bookstoremvvm.model.Book
 import retrofit2.Call
+
 import retrofit2.http.*
 
 // The methods in this interface are attributed with the specific (collection related) part of the URL

@@ -6,16 +6,16 @@ import com.example.bookstoremvvm.repository.BooksRepository
 
 class BooksViewModel: ViewModel() {
     private val repository = BooksRepository()
-    val booksFlow: State<List<Book>> = repository.booksFlow
-    val errorMessageFlow: State<String> = repository.errorMessageFlow
-    // TODO use reloadingFlow to show loading indicator
-    val reloadingFlow: State<Boolean> = repository.isLoadingBooks
+    val books: State<List<Book>> = repository.books
+    val errorMessage: State<String> = repository.errorMessage
+    // TODO use isLoadingBooks to show loading indicator
+    val isLoadingBooks: State<Boolean> = repository.isLoadingBooks
 
-    init {
-        reload()
-    }
+    /*init {
+        getBooks()
+    }*/
 
-    fun reload() {
+    fun getBooks() {
         repository.getBooks()
     }
 
@@ -31,7 +31,6 @@ class BooksViewModel: ViewModel() {
         repository.delete(book.id)
     }
 
-    // TODO filtering
     fun sortBooksByTitle(ascending: Boolean) {
         repository.sortBooksByTitle(ascending)
     }

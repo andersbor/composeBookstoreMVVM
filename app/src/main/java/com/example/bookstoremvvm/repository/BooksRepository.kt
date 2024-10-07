@@ -15,9 +15,9 @@ class BooksRepository {
     // the specific (collection) part of the URL is on the individual methods in the interface BookstoreService
 
     private val bookStoreService: BookStoreService
-    val booksFlow: MutableState<List<Book>> = mutableStateOf(listOf())
+    val books: MutableState<List<Book>> = mutableStateOf(listOf())
     val isLoadingBooks = mutableStateOf(false)
-    val errorMessageFlow = mutableStateOf("")
+    val errorMessage = mutableStateOf("")
 
     init {
         //val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
@@ -39,11 +39,11 @@ class BooksRepository {
                 if (response.isSuccessful) {
                     //Log.d("APPLE", response.body().toString())
                     val bookList: List<Book>? = response.body()
-                    booksFlow.value = bookList ?: emptyList()
-                    errorMessageFlow.value = ""
+                    books.value = bookList ?: emptyList()
+                    errorMessage.value = ""
                 } else {
                     val message = response.code().toString() + " " + response.message()
-                    errorMessageFlow.value = message
+                    errorMessage.value = message
                     Log.d("APPLE", message)
                 }
             }
@@ -51,7 +51,7 @@ class BooksRepository {
             override fun onFailure(call: Call<List<Book>>, t: Throwable) {
                 isLoadingBooks.value = false
                 val message = t.message ?: "No connection to back-end"
-                errorMessageFlow.value = message
+                errorMessage.value = message
                 Log.d("APPLE", message)
             }
         })
@@ -63,17 +63,17 @@ class BooksRepository {
                 if (response.isSuccessful) {
                     Log.d("APPLE", "Added: " + response.body())
                     getBooks()
-                    errorMessageFlow.value = ""
+                    errorMessage.value = ""
                 } else {
                     val message = response.code().toString() + " " + response.message()
-                    errorMessageFlow.value = message
+                    errorMessage.value = message
                     Log.d("APPLE", message)
                 }
             }
 
             override fun onFailure(call: Call<Book>, t: Throwable) {
                 val message = t.message ?: "No connection to back-end"
-                errorMessageFlow.value = message
+                errorMessage.value = message
                 Log.d("APPLE", message)
             }
         })
@@ -85,18 +85,18 @@ class BooksRepository {
             override fun onResponse(call: Call<Book>, response: Response<Book>) {
                 if (response.isSuccessful) {
                     Log.d("APPLE", "Delete: " + response.body())
-                    errorMessageFlow.value = ""
+                    errorMessage.value = ""
                     getBooks()
                 } else {
                     val message = response.code().toString() + " " + response.message()
-                    errorMessageFlow.value = message
+                    errorMessage.value = message
                     Log.d("APPLE", "Not deleted: $message")
                 }
             }
 
             override fun onFailure(call: Call<Book>, t: Throwable) {
                 val message = t.message ?: "No connection to back-end"
-                errorMessageFlow.value = message
+                errorMessage.value = message
                 Log.d("APPLE", "Not deleted $message")
             }
         })
@@ -108,19 +108,19 @@ class BooksRepository {
             override fun onResponse(call: Call<Book>, response: Response<Book>) {
                 if (response.isSuccessful) {
                     Log.d("APPLE", "Updated: " + response.body())
-                    errorMessageFlow.value = ""
+                    errorMessage.value = ""
                     Log.d("APPLE", "update successful")
                     getBooks()
                 } else {
                     val message = response.code().toString() + " " + response.message()
-                    errorMessageFlow.value = message
+                    errorMessage.value = message
                     Log.d("APPLE", "Update $message")
                 }
             }
 
             override fun onFailure(call: Call<Book>, t: Throwable) {
                 val message = t.message ?: "No connection to back-end"
-                errorMessageFlow.value = message
+                errorMessage.value = message
                 Log.d("APPLE", "Update $message")
             }
         })
@@ -129,17 +129,17 @@ class BooksRepository {
     fun sortBooksByTitle(ascending: Boolean) {
         Log.d("APPLE", "Sort by title")
         if (ascending)
-            booksFlow.value = booksFlow.value.sortedBy { it.title }
+            books.value = books.value.sortedBy { it.title }
         else
-            booksFlow.value = booksFlow.value.sortedByDescending { it.title }
+            books.value = books.value.sortedByDescending { it.title }
     }
 
     fun sortBooksByPrice(ascending: Boolean) {
         Log.d("APPLE", "Sort by price")
         if (ascending)
-            booksFlow.value = booksFlow.value.sortedBy { it.price }
+            books.value = books.value.sortedBy { it.price }
         else
-            booksFlow.value = booksFlow.value.sortedByDescending { it.price }
+            books.value = books.value.sortedByDescending { it.price }
     }
 
     fun filterByTitle(titleFragment: String) {
@@ -147,8 +147,8 @@ class BooksRepository {
             getBooks()
             return
         }
-        booksFlow.value =
-            booksFlow.value.filter {
+        books.value =
+            books.value.filter {
                 it.title.contains(titleFragment, ignoreCase = true)
             }
     }

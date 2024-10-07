@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.swiperefreshlayout) // swipe refresh layout
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -74,5 +75,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
-    implementation("androidx.compose.runtime:runtime-livedata:1.7.2") // observeAsState
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.3") // observeAsState
+
+   // implementation("com.google.accompanist:accompanist-swiperefresh:1.1.0")
 }
