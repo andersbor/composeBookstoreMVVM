@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.bookstoremvvm"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.bookstoremvvm"
@@ -74,8 +74,8 @@ dependencies {
 
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
-    implementation("androidx.compose.runtime:runtime-livedata:1.7.3") // observeAsState
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.6") // observeAsState
 
    // implementation("com.google.accompanist:accompanist-swiperefresh:1.1.0")
 }
