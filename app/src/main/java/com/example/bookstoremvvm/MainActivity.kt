@@ -46,12 +46,16 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 books = books,
                 errorMessage = errorMessage,
                 onBookSelected =
-                { book -> navController.navigate(NavRoutes.BookDetails.route + "/${book.id}") },
+                {
+
+                    book -> navController.navigate(NavRoutes.BookDetails.route + "/${book.id}") },
                 onBookDeleted = { book -> viewModel.remove(book) },
                 onAdd = { navController.navigate(NavRoutes.BookAdd.route) },
                 sortByTitle = { viewModel.sortBooksByTitle(ascending = it) },
                 sortByPrice = { viewModel.sortBooksByPrice(ascending = it) },
-                filterByTitle = { viewModel.filterByTitle(it) }
+                filterByTitle = { viewModel.filterByTitle(it) },
+                onBooksReload = { viewModel.getBooks() },
+                booksLoading = viewModel.isLoadingBooks.value
             )
         }
         composable(

@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,6 +52,8 @@ fun BookList(
     modifier: Modifier = Modifier,
     onBookSelected: (Book) -> Unit = {},
     onBookDeleted: (Book) -> Unit = {},
+    onBooksReload: () -> Unit = {},
+    booksLoading: Boolean = false,
     onAdd: () -> Unit = {},
     sortByTitle: (up: Boolean) -> Unit = {},
     sortByPrice: (up: Boolean) -> Unit = {},
@@ -83,6 +86,8 @@ fun BookList(
             errorMessage = errorMessage,
             sortByTitle = sortByTitle,
             sortByPrice = sortByPrice,
+            onBooksReload = onBooksReload,
+            booksLoading = booksLoading,
             onBookSelected = onBookSelected,
             onBookDeleted = onBookDeleted,
             onFilterByTitle = filterByTitle
@@ -90,6 +95,7 @@ fun BookList(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BookListPanel(
     books: List<Book>,
@@ -97,6 +103,8 @@ private fun BookListPanel(
     errorMessage: String,
     sortByTitle: (up: Boolean) -> Unit,
     sortByPrice: (up: Boolean) -> Unit,
+    onBooksReload: () -> Unit = {},
+    booksLoading: Boolean = false,
     onBookSelected: (Book) -> Unit,
     onBookDeleted: (Book) -> Unit,
     onFilterByTitle: (String) -> Unit,
@@ -120,8 +128,10 @@ private fun BookListPanel(
                 label = { Text("Filter by title") },
                 modifier = Modifier.weight(1f)
             )
-            Button(onClick = { onFilterByTitle(titleFragment) },
-                modifier = Modifier.padding(8.dp)) {
+            Button(
+                onClick = { onFilterByTitle(titleFragment) },
+                modifier = Modifier.padding(8.dp)
+            ) {
                 Text("Filter")
             }
         }
@@ -143,18 +153,20 @@ private fun BookListPanel(
         val orientation = LocalConfiguration.current.orientation
         val columns = if (orientation == Configuration.ORIENTATION_PORTRAIT) 1 else 2
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(columns),
-            //modifier = modifier.fillMaxSize()
+        // https://developer.android.com/develop/ui/compose/components/pull-to-refresh
+        PullToRefreshBox(
+            isRefreshing = booksLoading,
+            onRefresh = { onBooksReload() },
         ) {
-            items(books) { book ->
-                BookItem(
-                    book,
-                    onBookSelected = onBookSelected,
-                    onBookDeleted = onBookDeleted
-                )
+            LazyVerticalGrid(columns = GridCells.Fixed(columns)) {
+                items(books) { book ->
+                    BookItem(
+                        book,
+                        onBookSelected = onBookSelected,
+                        onBookDeleted = onBookDeleted
+                    )
+                }
             }
-
         }
     }
 }
@@ -180,7 +192,7 @@ private fun BookItem(
             )
             Icon(
                 imageVector = Icons.Filled.Delete,
-                contentDescription = "Remove",
+                contentDescription = "Remove " + book.title,
                 modifier = Modifier
                     .padding(8.dp)
                     .clickable { onBookDeleted(book) }
