@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.bookstoremvvm.model.Book
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,11 +48,11 @@ fun BookAdd(
                 ),
                 title = { Text("Add a book") })
         }) { innerPadding ->
-        Column(modifier = modifier.padding(innerPadding)) {
+        Column(modifier = modifier.padding(innerPadding).padding(8.dp)) {
             // TODO show error message
             val orientation = LocalConfiguration.current.orientation
             val isPortrait = orientation == Configuration.ORIENTATION_PORTRAIT
-            // TODO refactor duplicated code: component MyTextField?
+            // TODO refactor duplicated code: component InputField?
             if (isPortrait) {
                 OutlinedTextField(onValueChange = { title = it },
                     value = title,

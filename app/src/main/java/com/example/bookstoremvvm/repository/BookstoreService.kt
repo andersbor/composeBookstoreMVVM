@@ -21,11 +21,11 @@ interface BookStoreService {
     fun getBookById(@Path("bookId") bookId: Int): Call<Book>
 
     @POST("books")
-    fun saveBook(@Body book: Book): Call<Book>
+    fun createBook(@Body book: Book): Call<Book>
 
-    @DELETE("books/{id}")
-    fun deleteBook(@Path("id") id: Int): Call<Book>
+    @DELETE("books/{bookId}")
+    fun deleteBook(@Path("bookId") id: Int): Call<Book>
 
-    @PUT("books/{id}")
-    fun updateBook(@Path("id") id: Int, @Body book: Book): Call<Book>
+    @PUT("books/{bookId}")
+    fun updateBook(@Path("bookId") id: Int, @Body book: Book): Call<Book>
 }

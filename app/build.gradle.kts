@@ -75,7 +75,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
-    implementation("androidx.compose.runtime:runtime-livedata:1.7.6") // observeAsState
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.8") // observeAsState
 
    // implementation("com.google.accompanist:accompanist-swiperefresh:1.1.0")
 }

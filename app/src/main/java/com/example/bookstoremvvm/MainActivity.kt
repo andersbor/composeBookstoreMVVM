@@ -46,9 +46,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 books = books,
                 errorMessage = errorMessage,
                 onBookSelected =
-                {
-
-                    book -> navController.navigate(NavRoutes.BookDetails.route + "/${book.id}") },
+                    { book -> navController.navigate(NavRoutes.BookDetails.route + "/${book.id}") },
                 onBookDeleted = { book -> viewModel.remove(book) },
                 onAdd = { navController.navigate(NavRoutes.BookAdd.route) },
                 sortByTitle = { viewModel.sortBooksByTitle(ascending = it) },
@@ -64,13 +62,15 @@ fun MainScreen(modifier: Modifier = Modifier) {
         ) { backstackEntry ->
             val bookId = backstackEntry.arguments?.getInt("bookId")
             val book = books.find { it.id == bookId } ?: Book(title = "No book", price = 0.0)
-            BookDetails(modifier = modifier,
+            BookDetails(
+                modifier = modifier,
                 book = book,
                 onUpdate = { id: Int, book: Book -> viewModel.update(id, book) },
                 onNavigateBack = { navController.popBackStack() })
         }
         composable(NavRoutes.BookAdd.route) {
-            BookAdd(modifier = modifier,
+            BookAdd(
+                modifier = modifier,
                 addBook = { book -> viewModel.add(book) },
                 navigateBack = { navController.popBackStack() })
         }

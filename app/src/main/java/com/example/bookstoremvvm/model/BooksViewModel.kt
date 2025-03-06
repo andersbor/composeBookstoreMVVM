@@ -7,6 +7,7 @@ import com.example.bookstoremvvm.repository.BooksRepository
 class BooksViewModel: ViewModel() {
     private val repository = BooksRepository()
     val books: State<List<Book>> = repository.books
+    // TODO use StateFlow, not State
     val errorMessage: State<String> = repository.errorMessage
     // TODO use isLoadingBooks to show loading indicator
     val isLoadingBooks: State<Boolean> = repository.isLoadingBooks

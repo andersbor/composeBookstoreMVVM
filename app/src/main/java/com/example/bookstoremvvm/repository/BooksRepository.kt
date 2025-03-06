@@ -44,7 +44,7 @@ class BooksRepository {
                 } else {
                     val message = response.code().toString() + " " + response.message()
                     errorMessage.value = message
-                    Log.d("APPLE", message)
+                    Log.e("APPLE", message)
                 }
             }
 
@@ -52,13 +52,13 @@ class BooksRepository {
                 isLoadingBooks.value = false
                 val message = t.message ?: "No connection to back-end"
                 errorMessage.value = message
-                Log.d("APPLE", message)
+                Log.e("APPLE", message)
             }
         })
     }
 
     fun add(book: Book) {
-        bookStoreService.saveBook(book).enqueue(object : Callback<Book> {
+        bookStoreService.createBook(book).enqueue(object : Callback<Book> {
             override fun onResponse(call: Call<Book>, response: Response<Book>) {
                 if (response.isSuccessful) {
                     Log.d("APPLE", "Added: " + response.body())
@@ -67,14 +67,14 @@ class BooksRepository {
                 } else {
                     val message = response.code().toString() + " " + response.message()
                     errorMessage.value = message
-                    Log.d("APPLE", message)
+                    Log.e("APPLE", message)
                 }
             }
 
             override fun onFailure(call: Call<Book>, t: Throwable) {
                 val message = t.message ?: "No connection to back-end"
                 errorMessage.value = message
-                Log.d("APPLE", message)
+                Log.e("APPLE", message)
             }
         })
     }
@@ -90,14 +90,14 @@ class BooksRepository {
                 } else {
                     val message = response.code().toString() + " " + response.message()
                     errorMessage.value = message
-                    Log.d("APPLE", "Not deleted: $message")
+                    Log.e("APPLE", "Not deleted: $message")
                 }
             }
 
             override fun onFailure(call: Call<Book>, t: Throwable) {
                 val message = t.message ?: "No connection to back-end"
                 errorMessage.value = message
-                Log.d("APPLE", "Not deleted $message")
+                Log.e("APPLE", "Not deleted $message")
             }
         })
     }
@@ -114,14 +114,14 @@ class BooksRepository {
                 } else {
                     val message = response.code().toString() + " " + response.message()
                     errorMessage.value = message
-                    Log.d("APPLE", "Update $message")
+                    Log.e("APPLE", "Update $message")
                 }
             }
 
             override fun onFailure(call: Call<Book>, t: Throwable) {
                 val message = t.message ?: "No connection to back-end"
                 errorMessage.value = message
-                Log.d("APPLE", "Update $message")
+                Log.e("APPLE", "Update $message")
             }
         })
     }
@@ -136,10 +136,11 @@ class BooksRepository {
 
     fun sortBooksByPrice(ascending: Boolean) {
         Log.d("APPLE", "Sort by price")
-        if (ascending)
-            books.value = books.value.sortedBy { it.price }
-        else
-            books.value = books.value.sortedByDescending { it.price }
+        books.value = if (ascending) {
+            books.value.sortedBy { it.price }
+        } else {
+            books.value.sortedByDescending { it.price }
+        }
     }
 
     fun filterByTitle(titleFragment: String) {
